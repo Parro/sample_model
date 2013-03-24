@@ -7,9 +7,8 @@ class Database implements DataStoreInterface {
     
     protected $database;
     
-    public function __construct() {
-        $this->database = new PDO('mysql:host=localhost;dbname=clients', 'username', 
-                                  'password');
+    public function __construct(PDO $pdo) {
+        $this->database = $pdo;
         $this->database->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
     

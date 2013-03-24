@@ -9,9 +9,9 @@ class ClientModel
     public $validator;
     public $data = array();
  
-    public function __construct(array $data = array()) {
-        $this->database = new ClientDataStore();
-        $this->validator = new ClientValidation();
+    public function __construct(ClientDataStore $datastore, ValidatorInterface $validator, array $data = array()) {
+        $this->database = $datastore;
+        $this->validator = $validator;
         $this->data = $data;
     }
     

@@ -6,8 +6,8 @@ class ClientDataStore {
     
     protected $database;
     
-    public function __construct() {
-        $this->database = new Database();
+    public function __construct(DataStoreInterface $dsi) {
+        $this->database = $dsi;
     }
     
     public function saveClient($data) {
