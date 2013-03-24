@@ -1,8 +1,9 @@
 <?php
 
+require 'ValidatorInterface.php';
 require 'InvalidDataException.php';
 
-class ClientValidation {
+class ClientValidation implements ValidatorInterface {
     
     // All validated data items are required
     public $validated_data = array(
@@ -14,7 +15,7 @@ class ClientValidation {
     protected $data_has_been_validated = false;
     
     
-    public function validateData(array $data = array()) {
+    public function validate(array $data = array()) {
         
         $this->data = $data;
         

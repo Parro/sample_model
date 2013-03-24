@@ -20,7 +20,7 @@ class ClientModel
             $data = $this->data; // Fallback
         }
         
-        $vd = $this->validator->validateData($data);
+        $vd = $this->validator->validate($data);
         return $this->database->saveClient($vd);
     }
 }

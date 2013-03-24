@@ -1,8 +1,9 @@
 <?php
 
+require 'DataStoreInterface.php';
 require 'DatabaseException.php';
 
-class Database {
+class Database implements DataStoreInterface {
     
     protected $database;
     
@@ -12,11 +13,11 @@ class Database {
         $this->database->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
     
-    public function save($table, $kvp) {
+    public function save($location, $kvp) {
         $keys = array_keys($kvp);
         $values = array_values($kvp);
         
-        $sql = 'INSERT INTO ' . $table . ' (';
+        $sql = 'INSERT INTO ' . $location . ' (';
         
         $sql .= implode(',', $keys);
         
@@ -39,7 +40,7 @@ class Database {
         }
     }
     
-    public function update($table, $uniqueKey, $kvp) {
+    public function update($location, $uniqueKey, $kvp) {
         
         $uk = $kvp[$uniqueKey];
         unset($kvp[$uniqueKey]);
@@ -63,7 +64,18 @@ class Database {
             return $stmt->execute($values);
         } catch (PDOException $e) {
             throw new DatabaseException($e->getMessage());
-        }
-        
+        }        
+    }
+    
+    
+    /* These are now part of the interface, but for the example
+     * I have prepared, they are not going to be implemented.
+     */ 
+    public function retrieve($location, array $conditionals = array()) {
+        return;
+    }
+    
+    public function delete($location,  array $conditionals = array()) {
+        return;
     }
 }
