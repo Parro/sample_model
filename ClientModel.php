@@ -1,6 +1,6 @@
 <?php
 
-require 'Database.php';
+require 'ClientDataStore.php';
 require 'ClientValidation.php';
 
 class ClientModel
@@ -10,7 +10,7 @@ class ClientModel
     public $data = array();
  
     public function __construct(array $data = array()) {
-        $this->database = new Database();
+        $this->database = new ClientDataStore();
         $this->validator = new ClientValidation();
         $this->data = $data;
     }
@@ -21,6 +21,6 @@ class ClientModel
         }
         
         $vd = $this->validator->validateData($data);
-        return $this->database->saveData($vd);
+        return $this->database->saveClient($vd);
     }
 }

@@ -12,21 +12,58 @@ class Database {
         $this->database->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
     
-    public function saveData($data) {
-    
-        $sql = "INSERT INTO client 
-                    (first_name, last_name, email) 
-                VALUES (:first_name, :last_name, :email) 
-                ON DUPLICATE KEY UPDATE first_name=:first_name, last_name=:last_name";
+    public function save($table, $kvp) {
+        $keys = array_keys($kvp);
+        $values = array_values($kvp);
+        
+        $sql = 'INSERT INTO ' . $table . ' (';
+        
+        $sql .= implode(',', $keys);
+        
+        $sql .= ') VALUES (';
+        
+        foreach($values as $value) {
+            $sql .= '?,';
+        }
+        
+        $sql = rtrim($sql, ',');
+        
+        $sql .= ')';
         
         $stmt = $this->database->prepare($sql);
+
+        try {
+            return $stmt->execute($values);
+        } catch (PDOException $e) {
+            throw new DatabaseException($e->getMessage());
+        }
+    }
+    
+    public function update($table, $uniqueKey, $kvp) {
         
-        $params = array(
-            ':first_name' => $data['first_name'],
-            ':last_name' => $data['last_name'],
-            ':email' => $data['email'],
-        );
+        $uk = $kvp[$uniqueKey];
+        unset($kvp[$uniqueKey]);
         
-        return $stmt->execute($params);
+        $values = array_values($kvp);
+        $values[] = $uk;
+        
+        $sql = 'UPDATE ' . $table . ' SET ';
+        
+        foreach($kvp as $k => $v) {
+            $sql .= $k . '=?,';
+        }
+        
+        $sql = rtrim($sql, ',');
+        
+        $sql .= ' WHERE ' . $uniqueKey . '=?';
+
+        $stmt = $this->database->prepare($sql);
+        
+        try {
+            return $stmt->execute($values);
+        } catch (PDOException $e) {
+            throw new DatabaseException($e->getMessage());
+        }
+        
     }
 }
